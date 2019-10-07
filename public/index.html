@@ -1,0 +1,87 @@
+<html>
+
+	<head>
+		<title>apolloShield</title>
+		<link rel="stylesheet" href="/js/styles.css">
+	</head>
+
+	<body>
+
+		<script src="/js/angular.min.js"></script>
+		<script src="/js/groupsController.js"></script>
+		
+		<div id="employeesControl" ng-app="groupsApp" ng-controller='ctrlGroups'>
+
+			<div id="groups">
+				<table>
+					<thead>
+						<th></th>
+						<th>Group Name</th>
+						<th>Number of employees</th>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td><input type="radio" name="teams" ng-click="teamClickTrigger('all')" id="all"></td>
+							<td>All Employees</td>
+							<td> {{ '{{total_employees}}' }} </td>
+						</tr>
+
+						<tr ng-repeat="team in teamsList">
+							<td><input type="radio" name="teams"  ng-click="teamClickTrigger(team.team_name)" id="team.team_name"></td>
+							<td>{{ '{{team.team_name}}' }}</td>
+							<td>{{ '{{team.members}}' }}</td>
+						</tr>
+						<tr ng-if="newGroupMode">
+							<td></td>
+                                                        <td><input type="text" ng-model="newTeamToCreate" placeholder="Enter name" id="newTeam"/></td>
+                                                        <td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div id="groupsOperations">
+				<input type="button" value="add" id="addGroupBtn" class="operationBtn" ng-click="addGroup()"></input>
+				<input type="button" value="remove" id="removeGroupBtn" class="operationBtn" ng-click="removeTeam()"></input>
+				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewGroup(newTeamToCreate)"></input>
+			</div>
+
+			<div id="employeesOfGroup">
+				<table>
+					<thead>
+						<th></th>
+						<th>Name</th>
+						<th>Role</th>
+						<th>Birth day</th>
+						<th>E-mail</th>
+						<th>Salary</th>
+						<th>First work day</th>
+					</thead>
+
+					<tbody>
+						<tr ng-repeat="employee in selectedTeamMembers">
+							<td><input type="radio" name="employeesRadio" ng-click="employeeClickTrigger(employee)"></td>
+							<td>{{ '{{employee.full_name}}' }}</td>
+							<td>{{ '{{employee.role}}' }}</td>
+							<td>{{ '{{employee.birth_day}}' }}</td>
+							<td>{{ '{{employee.e_mail}}' }}</td>
+							<td>{{ '{{employee.salary_usd}}' }}</td>
+							<td>{{ '{{employee.first_work_day}}' }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div id="employeesOperations">
+				<input type="button" value="add" id="addGroupBtn" class="operationBtn" ng-click="addEmployee()"></input>
+				<input type="button" value="remove" id="removeGroupBtn" class="operationBtn" ng-click="removeEmployee()"></input>
+				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewEmployee(newEmployeeToCreate)"></input>
+				{{ '{{newTeamToCreate}}' }}
+			</div>
+
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,114 @@
+
+#employeesControl {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0px;
+	left: 0px;
+}
+
+#employeesControl table th {
+	border-bottom: 2px darkgray solid;
+}
+
+#employeesControl th td {
+	padding-right: 2.5px;
+}
+
+#groups {
+	position: absolute;
+	left: 10%;
+	top: 15%;
+	width: 20%;
+	height: 50%;
+	border: 0.5px gray solid;
+	border-top: none;
+}
+
+#groups table {
+	width:100%;
+	text-align: center;
+}
+
+#groups tbody {
+	overflow: scroll;
+}
+
+#groups tbody td {
+	cursor: pointer;
+}
+
+#groups tbody tr:hover {
+	background-color: gray;
+}
+
+#groups tbody tr:nth-child(even) {
+	background-color: lightgray;
+}
+
+#groups tbody tr:nth-child(even):hover {
+	background-color: lightgray;
+}
+
+#groupsOperations {
+	position: absolute;
+	top: 68%;
+	left: 10%;
+	width: 20%;
+	height: 35px;
+}
+
+.operationBtn {
+	width: 60px;
+	height: 30px;
+}
+
+#addGroupBtn {
+	position: absolute;
+	right: 0px;
+}
+
+#removeGroupBtn {
+	position: absolute;
+	right: 75px;
+}
+
+#newTeam {
+	width: 80px;
+}
+
+#employeesOfGroup {
+	position: absolute;
+	left: 35%;
+	top: 15%;
+	width: 55%;
+	height: 50%;
+	border: 0.5px gray solid;
+	border-top: none;
+}
+
+#employeesOfGroup table {
+	width: 100%;
+}
+#employeesOfGroup tbody {
+	overflow: scroll;
+}
+
+#employeesOfGroup tbody td {
+	cursor: pointer;
+}
+
+#employeesOfGroup tbody tr:hover {
+        background-color: gray;
+}
+
+#employeesOfGroup tbody tr:nth-child(even) {
+	background-color: lightgray;
+}
+
+#employeesOfGroup tbody tr:nth-child(even):hover {
+	background-color: lightgray;
+}
+
+
+
