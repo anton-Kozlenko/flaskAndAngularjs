@@ -102,6 +102,10 @@ def assign_employee_to_team():
 	# get ids of employee & team
 	tmp_employee = Employee.query.filter_by(full_name=employee_name).first()
 	tmp_team = teams.query.filter_by(team_name=team_name).first()
+	# remove old assignments if needed
+	old_assignment = employees_in_teams.query.filter_by(employee_id=tmp_employee.employee_id).first()
+	if not old_assignment == None:
+		db.session.delete(old_assignment)
 	# create assignment
 	new_assign = employees_in_teams(employee_id=tmp_employee.employee_id,
 					team_id=tmp_team.team_id)

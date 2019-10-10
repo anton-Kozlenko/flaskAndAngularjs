@@ -1,25 +1,33 @@
 
 var groupsApp = angular.module('groupsApp', []);
 
+
+groupsApp.config(['$interpolateProvider', function($interpolateProvider) {
+	$interpolateProvider.startSymbol('[[');
+  	$interpolateProvider.endSymbol(']]');
+}]);
+
 groupsApp.controller('ctrlGroups', function($scope, $http) {
 
-	$scope.newTeamToCreate = 'Anton';
+	$scope.newTeamToCreate = '';
+	$scope.daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+	$scope.empRoles = ['team_leader', 'CTO', 'CEO', 'employee'];
 
 	$scope.updateData = function() {
-		$http.get('http://192.168.43.129:5000/get/all/employeesRoles')
+		$http.get('http://10.0.0.5:5000/get/all/employeesRoles')
         	.then(function(response) {
                 	var res_j = response.data;
                 	$scope.allEmployees = res_j['data'];
                 	$scope.total_employees = $scope.allEmployees.length
         	});
 
-		$http.get('http://192.168.43.129:5000/get/all/employeesWithGroups')
+		$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
         	.then(function(response) {
                 	var res_j = response.data;
                 	$scope.allEmployeesGroups = res_j['data'];
         	});
 
-		$http.get('http://192.168.43.129:5000/get/all/teams')
+		$http.get('http://10.0.0.5:5000/get/all/teams')
         	.then(function(response) {
                 	var res_j = response.data;
                 	$scope.teamsList = res_j['data'];
@@ -27,20 +35,20 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 	};
 
 
-	$http.get('http://192.168.43.129:5000/get/all/employeesRoles')
+	$http.get('http://10.0.0.5:5000/get/all/employeesRoles')
 	.then(function(response) {
 		var res_j = response.data;
 		$scope.allEmployees = res_j['data'];
 		$scope.total_employees = $scope.allEmployees.length
 	});
 
-	$http.get('http://192.168.43.129:5000/get/all/employeesWithGroups')
+	$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
 	.then(function(response) {
 		var res_j = response.data;
 		$scope.allEmployeesGroups = res_j['data'];
 	});
 
-	$http.get('http://192.168.43.129:5000/get/all/teams')
+	$http.get('http://10.0.0.5:5000/get/all/teams')
 	.then(function(response) {
 		var res_j = response.data;
 		$scope.teamsList = res_j['data'];
@@ -49,6 +57,92 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 		//	$scope.total_employees += Number(obj.members);
 		//});
 	});
+
+	$scope.newEmployeeMode = false;
+	$scope.selectedEmployee = '';	
+
+	$scope.employeeClickTrigger = function(input) {
+		$scope.selectedEmployee = input;
+	}
+
+	$scope.addEmployee = function() {
+		if ($scope.newEmployeeMode || $scope.selectedGroup == '' || $scope.selectedGroup == 'all') {
+			return;
+		}
+		$scope.newEmployeeMode = true;
+		$scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
+		
+	};
+
+	$scope.saveNewEmployee = function() {
+		if ($scope.selectedGroup == '' || $scope.selectedGroup == 'all') {
+			alert('Specific team should be selected.');
+			return;
+		}
+		if ($scope.addEmployeeElement.full_name == '') {
+			alert('Enter full name.');
+			return;
+		}
+		if ($scope.addEmployeeElement.birth_day == '') {
+			alert('enter birth date.');
+                        return;
+		}
+		if ($scope.addEmployeeElement.e_mail == '') {
+			alert('enter Email.');
+			return;
+		}
+		if (Number.isFinite(Number($scope.addEmployeeElement.salary_usd)) == false) {
+			alert('enter salary number in usd.');
+			return;
+		}
+		if ($scope.addEmployeeElement.first_work_day == '') {
+			alert('select First work day.');
+			return;
+		}
+		if ($scope.addEmployeeElement.role == '') {
+			alert('select role.');
+			return;
+		}
+		var data = {
+			"full_name": $scope.addEmployeeElement.full_name,
+			"birth_day": $scope.addEmployeeElement.birth_day,
+			"email": $scope.addEmployeeElement.e_mail,
+			"salary_usd": $scope.addEmployeeElement.salary_usd,
+			"first_work_day": $scope.addEmployeeElement.first_work_day
+		};
+		// create employee
+                $http.post('http://10.0.0.5:5000/create/employee', data,{'Content-Type': 'application/json'})
+                .then(function(response) {
+                        data = {"employee_name": $scope.addEmployeeElement.full_name, "role": $scope.addEmployeeElement.role};
+			// role assignment
+			$http.post('http://10.0.0.5:5000/set/role', data,{'Content-Type': 'application/json'})
+                	.then(function(response) {
+				data = {"employee_name": $scope.addEmployeeElement.full_name, "team_name": $scope.selectedGroup};
+				// group assignment
+				$http.post('http://10.0.0.5:5000/assign', data,{'Content-Type': 'application/json'})
+                		.then(function(response) {
+                        		$scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
+					$scope.newEmployeeMode = false;
+                        		$scope.updateData();
+					$scope.teamClickTrigger($scope.selectedGroup)
+                		});
+                	});
+                });
+	};
+
+	$scope.removeEmployee = function() {
+		if ($scope.selectedEmployee == '') {
+			alert('none employee is selected.');
+			return;
+		}
+		data = {"employee_name": $scope.selectedEmployee.full_name};
+		$http.post('http://10.0.0.5:5000/remove/employee', data,{'Content-Type': 'application/json'})
+		.then(function(response) {
+			$scope.selectedEmployee == ''
+			$scope.updateData();
+			$scope.teamClickTrigger($scope.selectedGroup)
+		});
+	}
 
 	$scope.selectedGroup = '';
 	$scope.selectedTeamMembers = [];
@@ -62,14 +156,16 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 		$scope.addGroupElement = [{'team_name': '', 'members': ''}];
 	};
 
-	$scope.saveNewGroup = function(input) {
+	$scope.saveNewGroup = function() {
+		console.log(document.getElementById("newTeam"));
+		input = document.getElementById("newTeam").value;
 		alert('saving group: '+ input)
 		if($scope.newGroupName == '') {
 			alert('input is empty...')
 			return;
 		}
 		var data = {'team_name': input};
-		$http.post('http://192.168.43.129:5000/create/team', data,{'Content-Type': 'application/json'})
+		$http.post('http://10.0.0.5:5000/create/team', data,{'Content-Type': 'application/json'})
 		.then(function(response) {
 			$scope.addGroupElement = [];
 			$scope.updateData();
@@ -83,7 +179,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 			return;
 		}
 		var data = {'team_name': $scope.selectedGroup};
-		 $http.post('http://192.168.43.129:5000/remove/team', data,{'Content-Type': 'application/json'})
+		 $http.post('http://10.0.0.5:5000/remove/team', data,{'Content-Type': 'application/json'})
                 .then(function(response) {
                         $scope.addGroupElement = [];
                         $scope.updateData();

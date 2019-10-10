@@ -110,5 +110,16 @@
 	background-color: lightgray;
 }
 
+#employeesOperations {
+	position: absolute;
+	left: 35%;
+	top: 68%;
+	width: 55%;
+}
+
+.newEmpInput {
+	width: 100px;
+}
+
 
 

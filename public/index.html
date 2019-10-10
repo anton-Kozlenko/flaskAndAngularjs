@@ -24,17 +24,17 @@
 						<tr>
 							<td><input type="radio" name="teams" ng-click="teamClickTrigger('all')" id="all"></td>
 							<td>All Employees</td>
-							<td> {{ '{{total_employees}}' }} </td>
+							<td> [[total_employees]] </td>
 						</tr>
 
 						<tr ng-repeat="team in teamsList">
 							<td><input type="radio" name="teams"  ng-click="teamClickTrigger(team.team_name)" id="team.team_name"></td>
-							<td>{{ '{{team.team_name}}' }}</td>
-							<td>{{ '{{team.members}}' }}</td>
+							<td>[[team.team_name]]</td>
+							<td>[[team.members]]</td>
 						</tr>
 						<tr ng-if="newGroupMode">
 							<td></td>
-                                                        <td><input type="text" ng-model="newTeamToCreate" placeholder="Enter name" id="newTeam"/></td>
+                                                        <td><input type="text" ng-bind="newTeamToCreate" placeholder="Enter name" id="newTeam" #newTeam /></td>
                                                         <td></td>
 						</tr>
 					</tbody>
@@ -44,7 +44,7 @@
 			<div id="groupsOperations">
 				<input type="button" value="add" id="addGroupBtn" class="operationBtn" ng-click="addGroup()"></input>
 				<input type="button" value="remove" id="removeGroupBtn" class="operationBtn" ng-click="removeTeam()"></input>
-				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewGroup(newTeamToCreate)"></input>
+				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewGroup()"></input>
 			</div>
 
 			<div id="employeesOfGroup">
@@ -62,12 +62,29 @@
 					<tbody>
 						<tr ng-repeat="employee in selectedTeamMembers">
 							<td><input type="radio" name="employeesRadio" ng-click="employeeClickTrigger(employee)"></td>
-							<td>{{ '{{employee.full_name}}' }}</td>
-							<td>{{ '{{employee.role}}' }}</td>
-							<td>{{ '{{employee.birth_day}}' }}</td>
-							<td>{{ '{{employee.e_mail}}' }}</td>
-							<td>{{ '{{employee.salary_usd}}' }}</td>
-							<td>{{ '{{employee.first_work_day}}' }}</td>
+							<td>[[employee.full_name]]</td>
+							<td>[[employee.role]]</td>
+							<td>[[employee.birth_day]]</td>
+							<td>[[employee.e_mail]]</td>
+							<td>[[employee.salary_usd]]</td>
+							<td>[[employee.first_work_day]]</td>
+						</tr>
+						<tr ng-if="newEmployeeMode">
+							<td></td>
+							<td><input id="newEmployeeName" class= "newEmpInput" ng-model="addEmployeeElement.full_name" placeholder="full name" /></td>
+							<td>
+								<select id="newEmployeeRole" class= "newEmpInput" ng-model="addEmployeeElement.role">
+									<option ng-repeat="role in empRoles" value="[[role]]">[[role]]</option>
+								</select>
+							</td>
+							<td><input id="newEmployeeBDay" class= "newEmpInput" ng-model="addEmployeeElement.birth_day" placeholder="birth day" /></td>
+							<td><input id="newEmployeeMail" class= "newEmpInput" ng-model="addEmployeeElement.e_mail" placeholder="Email" /></td>
+							<td><input id="newEmployeeSalary" class= "newEmpInput" ng-model="addEmployeeElement.salary_usd" placeholder="salary USD" /></td>
+							<td>
+								<select id="newEmployeeFWDay" class= "newEmpInput" ng-model="addEmployeeElement.first_work_day">
+									<option ng-repeat="day in daysOfWeek" value="[[day]]">[[day]]</option>
+								</select>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -76,8 +93,8 @@
 			<div id="employeesOperations">
 				<input type="button" value="add" id="addGroupBtn" class="operationBtn" ng-click="addEmployee()"></input>
 				<input type="button" value="remove" id="removeGroupBtn" class="operationBtn" ng-click="removeEmployee()"></input>
-				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewEmployee(newEmployeeToCreate)"></input>
-				{{ '{{newTeamToCreate}}' }}
+				<input type="button" value="update" id="updateGroupBtn" class="operationBtn" ng-click="updateEmployee()"></input>
+				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewEmployee()"></input>
 			</div>
 
 		</div>
