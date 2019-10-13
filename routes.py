@@ -1,3 +1,4 @@
+import requests
 import json
 from flaskServer import app
 from flaskServer.employeeDecorators import verify_employee, verify_positions_in_db, verify_employee_exist, verify_team_exist
@@ -274,14 +275,26 @@ def send_js(path):
 def get_frontend_app():
 	return render_template('index.html')
 
+@app.route('/getEURsalary', methods=['GET'])
+def get_eur_salary():
+	eur_val_raw = requests.get('https://free.currconv.com/api/v7/convert?q=USD_EUR&compact=ultra&apiKey=75b825886c5adacdcc78')
+	eur_val_data = str(eur_val_raw.content.decode("utf-8"))
+	print(eur_val_data)
+	eur_val_j = json.loads(eur_val_data)
+	eur_val = eur_val_j['USD_EUR']
+	print(eur_val)
+	
+	details_from_db = db.session.query(Employee, position_of_employee, positions, employees_in_teams, teams).filter(Employee.employee_id == position_of_employee.employee_id).filter(position_of_employee.position_id == positions.position_id).filter(Employee.employee_id == employees_in_teams.employee_id).filter(employees_in_teams.team_id == teams.team_id).all()
+
+	result = {'data': []}
+	for emp, assign, pos, team_assign, team in details_from_db:
+		eur_salaty = float(emp.salary_usd) * float(eur_val)
+		print(emp.salary_usd)
+		print(str(eur_salaty))
+		result['data'].append({'full_name': emp.full_name, 'salary_usd': str(eur_salaty) ,'birth_day': emp.birth_day, 'e_mail': emp.email, 'first_work_day': emp.first_work_day, 'role': pos.position_name, 'team_name': team.team_name})
+
+	return jsonify(result)
 
 
 
-
-
-
-
-
-
-
-
+	

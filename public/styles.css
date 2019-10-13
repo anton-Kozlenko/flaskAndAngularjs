@@ -1,4 +1,12 @@
 
+
+#choose_salary_coin {
+	position: absolute;
+	left: 35%;
+	top: 5px;
+	height: 30px;	
+}
+
 #employeesControl {
 	position: absolute;
 	height: 100%;
@@ -121,5 +129,11 @@
 	width: 100px;
 }
 
-
+#map {
+	position: absolute;
+	left: 15%;
+	bottom: 0px;
+	height: 26%;
+	width: 40%;
+}
 

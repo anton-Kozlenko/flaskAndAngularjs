@@ -5,14 +5,62 @@
 		<link rel="stylesheet" href="/js/styles.css">
 	</head>
 
-	<body>
-
+	<body onload="initMap()">
 		<script src="/js/angular.min.js"></script>
 		<script src="/js/groupsController.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js"></script>
 		
+		<script type="text/javascript">
+		function initMap() {
+			empLocation = {
+				lat: 32.109333,
+				lng: 34.855499
+			};
+
+			var map = new google.maps.Map(document.getElementById('map'), {
+      				zoom: 4,
+      				center: empLocation
+    			});
+
+			var marker = new google.maps.Marker({position: empLocation, map: map});
+
+    			function renderDirections(result) {
+      				var directionsRenderer = new google.maps.DirectionsRenderer({
+      					draggable: true,
+      					map: map,
+    				});
+
+      				directionsRenderer.setMap(map);
+      				directionsRenderer.setDirections(result);
+    			}
+
+
+    			var directionsService = new google.maps.DirectionsService;
+
+    			function requestDirections(start, end) {
+      				directionsService.route({
+        				origin: start,
+        				destination: end,
+        				travelMode: 'DRIVING'
+      				}, function(result) {
+        				renderDirections(result);
+      				});
+    			}
+
+    			requestDirections('Huntsville, AL', 'Boston, MA');
+    			requestDirections('Bakersfield, CA', 'Vancouver, BC');
+		}
+    </script>
+
+
 		<div id="employeesControl" ng-app="groupsApp" ng-controller='ctrlGroups'>
+			
+			<div id="choose_salary_coin">
+				Choose salary display: <input type="radio" name="coin" checked="checked" ng-click="displaySalary('usd')">USD<input type="radio" name="coin" ng-click="displaySalary('eur')">EUR
+			</div>
 
 			<div id="groups">
+
 				<table>
 					<thead>
 						<th></th>
@@ -86,6 +134,23 @@
 								</select>
 							</td>
 						</tr>
+						<tr ng-if="updateEmployeeMode">
+							<td></td>
+							<td>[[employeeToUpdate.full_name]]</td>
+							<td>
+								<select id="updateEmployeeRole" class= "newEmpInput" ng-model="employeeToUpdate.role">
+									<option ng-repeat="role in empRoles" value="[[role]]">[[role]]</option>
+								</select>
+                                                        </td>
+							<td>[[employeeToUpdate.birth_day]]</td>
+                                                        <td><input id="updateEmployeeMail" class= "newEmpInput" ng-model="employeeToUpdate.e_mail" /></td>
+                                                        <td><input id="updateEmployeeSalary" class= "newEmpInput" ng-model="employeeToUpdate.salary_usd" /></td>
+							<td>
+								<select id="updateEmployeeFWDay" class= "newEmpInput" ng-model="employeeToUpdate.first_work_day">
+									<option ng-repeat="day in daysOfWeek" value="[[day]]">[[day]]</option>
+								</select>
+                                                        </td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -96,8 +161,14 @@
 				<input type="button" value="update" id="updateGroupBtn" class="operationBtn" ng-click="updateEmployee()"></input>
 				<input type="button" value="save" id="saveNewGroupBtn" class="operationBtn" ng-click="saveNewEmployee()"></input>
 			</div>
-
 		</div>
+		
+
+
+		
+         		<div id="map">
+         		</div>
+
 
 	</body>
 
