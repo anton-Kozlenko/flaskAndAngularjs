@@ -21,8 +21,8 @@
 			xmlHttp.send( null );
 			var res_j = JSON.parse(xmlHttp.responseText);
 			var thisLocation = {
-                                lng: Number(res_j['lat']),
-                                lat: Number(res_j['lon'])
+                                lat: Number(res_j['lat']),
+                                lng: Number(res_j['lon'])
                         };
 			if (typeof marker !== 'undefined') {
 				marker.setMap(null);
