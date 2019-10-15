@@ -15,26 +15,26 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 	$scope.empRoles = ['team_leader', 'CTO', 'CEO', 'employee'];
 
 	$scope.updateData = function() {
-		$http.get('http://10.100.102.15:5000/get/all/employeesRoles')
+		$http.get('http://10.0.0.5:5000/get/all/employeesRoles')
         	.then(function(response) {
                 	var res_j = response.data;
                 	$scope.allEmployees = res_j['data'];
                 	$scope.total_employees = $scope.allEmployees.length
         	});
 
-		$http.get('http://10.100.102.15:5000/get/all/employeesWithGroups')
+		$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
         	.then(function(response) {
                 	var res_j = response.data;
                 	$scope.allEmployeesGroups = res_j['data'];
         	});
 
-		$http.get('http://10.100.102.15:5000/getEURsalary')
+		$http.get('http://10.0.0.5:5000/getEURsalary')
                 .then(function(response) {
                         var res_j = response.data;
                         $scope.allEmployeesGroupsEUR = res_j['data'];
                 });
 
-		$http.get('http://10.100.102.15:5000/get/all/teams')
+		$http.get('http://10.0.0.5:5000/get/all/teams')
         	.then(function(response) {
                 	var res_j = response.data;
                 	$scope.teamsList = res_j['data'];
@@ -42,20 +42,20 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 	};
 
 
-	$http.get('http://10.100.102.15:5000/get/all/employeesRoles')
+	$http.get('http://10.0.0.5:5000/get/all/employeesRoles')
 	.then(function(response) {
 		var res_j = response.data;
 		$scope.allEmployees = res_j['data'];
 		$scope.total_employees = $scope.allEmployees.length
 	});
 
-	$http.get('http://10.100.102.15:5000/get/all/employeesWithGroups')
+	$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
 	.then(function(response) {
 		var res_j = response.data;
 		$scope.allEmployeesGroups = res_j['data'];
 	});
 
-	$http.get('http://10.100.102.15:5000/get/all/teams')
+	$http.get('http://10.0.0.5:5000/get/all/teams')
 	.then(function(response) {
 		var res_j = response.data;
 		$scope.teamsList = res_j['data'];
@@ -120,19 +120,19 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 				"first_work_day": $scope.addEmployeeElement.first_work_day
 			};
 			 // create employee
-			$http.post('http://10.100.102.15:5000/create/employee', data,{'Content-Type': 'application/json'})
+			$http.post('http://10.0.0.5:5000/create/employee', data,{'Content-Type': 'application/json'})
 			.then(function(response) {
 				data = {"employee_name": $scope.addEmployeeElement.full_name, "role": $scope.addEmployeeElement.role};
 				// role assignment
-				$http.post('http://10.100.102.15:5000/set/role', data,{'Content-Type': 'application/json'})
+				$http.post('http://10.0.0.5:5000/set/role', data,{'Content-Type': 'application/json'})
 				.then(function(response) {
 					data = {"employee_name": $scope.addEmployeeElement.full_name, "team_name": $scope.selectedGroup};
 					// group assignment
-					$http.post('http://10.100.102.15:5000/assign', data,{'Content-Type': 'application/json'})
+					$http.post('http://10.0.0.5:5000/assign', data,{'Content-Type': 'application/json'})
 					.then(function(response) {
 						$scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
 						$scope.newEmployeeMode = false;
-						$http.get('http://10.100.102.15:5000/get/all/employeesWithGroups')
+						$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
 						.then(function(response) {
 							var res_j = response.data;
 							$scope.allEmployeesGroups = res_j['data'];
@@ -155,13 +155,13 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 				"first_work_day": $scope.employeeToUpdate.first_work_day
 			};
 			// update employee
-                	$http.post('http://10.100.102.15:5000/update/employee', data,{'Content-Type': 'application/json'})
+                	$http.post('http://10.0.0.5:5000/update/employee', data,{'Content-Type': 'application/json'})
                 	.then(function(response) {
                         	data = {"employee_name": $scope.employeeToUpdate.full_name, "role": $scope.employeeToUpdate.role};
 				// role assignment
-				$http.post('http://10.100.102.15:5000/set/role', data,{'Content-Type': 'application/json'})
+				$http.post('http://10.0.0.5:5000/set/role', data,{'Content-Type': 'application/json'})
                 		.then(function(response) {
-					$http.get('http://10.100.102.15:5000/get/all/employeesWithGroups')
+					$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
 					.then(function(response) {
 						var res_j = response.data;
 						$scope.allEmployeesGroups = res_j['data'];
@@ -169,7 +169,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 						$scope.teamClickTrigger($scope.selectedGroup);
 						$scope.updateData();
 					});
-					//$http.get('http://10.100.102.15:5000/getEURsalary')
+					//$http.get('http://10.0.0.5:5000/getEURsalary')
                 			//.then(function(response) {
                         		//	var res_j = response.data;
                         		//	$scope.allEmployeesGroupsEUR = res_j['data'];
@@ -185,17 +185,17 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 			return;
 		}
 		data = {"employee_name": $scope.selectedEmployee.full_name};
-		$http.post('http://10.100.102.15:5000/remove/employee', data,{'Content-Type': 'application/json'})
+		$http.post('http://10.0.0.5:5000/remove/employee', data,{'Content-Type': 'application/json'})
 		.then(function(response) {
 			$scope.selectedEmployee == ''
-			$http.get('http://10.100.102.15:5000/get/all/employeesWithGroups')
+			$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
 			.then(function(response) {
 				var res_j = response.data;
 				$scope.allEmployeesGroups = res_j['data'];
 				$scope.teamClickTrigger($scope.selectedGroup);
 				$scope.updateData();
 			});
-			//$http.get('http://10.100.102.15:5000/getEURsalary')
+			//$http.get('http://10.0.0.5:5000/getEURsalary')
                 	//.then(function(response) {
                         //	var res_j = response.data;
                         //	$scope.allEmployeesGroupsEUR = res_j['data'];
@@ -209,7 +209,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 	$scope.displaySalary = function(input) {
 		if (input === 'eur') {
 			$scope.coinType = 'eur';
-			$http.get('http://10.100.102.15:5000/getEURsalary')
+			$http.get('http://10.0.0.5:5000/getEURsalary')
                         .then(function(response) {
                                 var res_j = response.data;
                                 $scope.allEmployeesGroups = res_j['data'];
@@ -218,7 +218,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 		}
 		else {
 			$scope.coinType = 'usd';
-			$http.get('http://10.100.102.15:5000/get/all/employeesWithGroups')
+			$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
                         .then(function(response) {
                                 var res_j = response.data;
                                 $scope.allEmployeesGroups = res_j['data'];
@@ -269,7 +269,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 			return;
 		}
 		var data = {'team_name': input};
-		$http.post('http://10.100.102.15:5000/create/team', data,{'Content-Type': 'application/json'})
+		$http.post('http://10.0.0.5:5000/create/team', data,{'Content-Type': 'application/json'})
 		.then(function(response) {
 			$scope.addGroupElement = [];
 			$scope.updateData();
@@ -283,7 +283,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 			return;
 		}
 		var data = {'team_name': $scope.selectedGroup};
-		 $http.post('http://10.100.102.15:5000/remove/team', data,{'Content-Type': 'application/json'})
+		 $http.post('http://10.0.0.5:5000/remove/team', data,{'Content-Type': 'application/json'})
                 .then(function(response) {
                         $scope.addGroupElement = [];
                         $scope.updateData();

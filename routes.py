@@ -214,6 +214,17 @@ def set_employee_role():
 
 
 ########## GET REQUESTS HANDLERS ##########
+@app.route('/get/location/<emp_name>')
+def get_employee_location(emp_name):
+	# get id of employee
+	emp_id = Employee.query.filter_by(full_name=emp_name).first()
+	# get location from db
+	location = locations.query.filter_by(employee_id=emp_id.employee_id).first()
+	res = {'lon': '', 'lat': ''}
+	res['lon'] = location.location_longitude
+	res['lat'] = location.location_latitude
+	return jsonify(res)
+
 
 @app.route('/get/all/teams', methods=['GET'])
 def get_all_groups():
@@ -279,18 +290,14 @@ def get_frontend_app():
 def get_eur_salary():
 	eur_val_raw = requests.get('https://free.currconv.com/api/v7/convert?q=USD_EUR&compact=ultra&apiKey=75b825886c5adacdcc78')
 	eur_val_data = str(eur_val_raw.content.decode("utf-8"))
-	print(eur_val_data)
 	eur_val_j = json.loads(eur_val_data)
 	eur_val = eur_val_j['USD_EUR']
-	print(eur_val)
 	
 	details_from_db = db.session.query(Employee, position_of_employee, positions, employees_in_teams, teams).filter(Employee.employee_id == position_of_employee.employee_id).filter(position_of_employee.position_id == positions.position_id).filter(Employee.employee_id == employees_in_teams.employee_id).filter(employees_in_teams.team_id == teams.team_id).all()
 
 	result = {'data': []}
 	for emp, assign, pos, team_assign, team in details_from_db:
 		eur_salaty = float(emp.salary_usd) * float(eur_val)
-		print(emp.salary_usd)
-		print(str(eur_salaty))
 		result['data'].append({'full_name': emp.full_name, 'salary_usd': str(eur_salaty) ,'birth_day': emp.birth_day, 'e_mail': emp.email, 'first_work_day': emp.first_work_day, 'role': pos.position_name, 'team_name': team.team_name})
 
 	return jsonify(result)

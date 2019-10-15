@@ -11,18 +11,36 @@
 		<script src="https://maps.googleapis.com/maps/api/js"></script>
 		
 		<script type="text/javascript">
+		var map;
+		var marker;
+
+		function setMarker(empName) {
+			
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", 'http://10.0.0.5:5000/get/location/' +  empName, false );
+			xmlHttp.send( null );
+			var res_j = JSON.parse(xmlHttp.responseText);
+			var thisLocation = {
+                                lng: Number(res_j['lat']),
+                                lat: Number(res_j['lon'])
+                        };
+			if (typeof marker !== 'undefined') {
+				marker.setMap(null);
+			}
+			marker = new google.maps.Marker({position: thisLocation, map: map});
+		}
+		
 		function initMap() {
+			
 			empLocation = {
-				lat: 32.109333,
-				lng: 34.855499
+				lng: 34.855499,
+				lat: 32.109333
 			};
 
-			var map = new google.maps.Map(document.getElementById('map'), {
-      				zoom: 4,
+			map = new google.maps.Map(document.getElementById('map'), {
+      				zoom: 10,
       				center: empLocation
     			});
-
-			var marker = new google.maps.Marker({position: empLocation, map: map});
 
     			function renderDirections(result) {
       				var directionsRenderer = new google.maps.DirectionsRenderer({
@@ -110,7 +128,7 @@
 					<tbody>
 						<tr ng-repeat="employee in selectedTeamMembers">
 							<td><input type="radio" name="employeesRadio" ng-click="employeeClickTrigger(employee)"></td>
-							<td>[[employee.full_name]]</td>
+							<td onclick="setMarker(this.innerText)">[[employee.full_name]]</td>
 							<td>[[employee.role]]</td>
 							<td>[[employee.birth_day]]</td>
 							<td>[[employee.e_mail]]</td>
