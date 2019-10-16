@@ -8,6 +8,7 @@ all queries to db are wraped with SQLAlchemy.
 every important api endpoint on the server is protected by a decorator.
 external api usage to get value of eur by usd - api token can be seen in the code.
 external api usage of Google maps.
+employees locations are generated when employees are created.
 
 ### Backend instructions ###
 
