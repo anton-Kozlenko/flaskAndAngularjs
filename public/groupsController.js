@@ -130,15 +130,23 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
 					// group assignment
 					$http.post('http://10.0.0.5:5000/assign', data,{'Content-Type': 'application/json'})
 					.then(function(response) {
-						$scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
-						$scope.newEmployeeMode = false;
-						$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
+						rndLat = (Math.random() * (32.128473 - 32.037289) + 32.128473).toFixed(8)
+						randLng = (Math.random() * (34.816275 - 34.770466) + 34.816275).toFixed(8)
+						data = {'employee_name': $scope.addEmployeeElement.full_name , "longitude": randLng, "latitude": rndLat};
+						// set location
+						$http.post('http://10.0.0.5:5000/set/location', data,{'Content-Type': 'application/json'})
 						.then(function(response) {
-							var res_j = response.data;
-							$scope.allEmployeesGroups = res_j['data'];
-							$scope.teamClickTrigger($scope.selectedGroup);
-							$scope.updateData();
-                                        	});
+							$scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
+							$scope.newEmployeeMode = false;
+							// update data
+							$http.get('http://10.0.0.5:5000/get/all/employeesWithGroups')
+							.then(function(response) {
+								var res_j = response.data;
+								$scope.allEmployeesGroups = res_j['data'];
+								$scope.teamClickTrigger($scope.selectedGroup);
+								$scope.updateData();
+                                        		});
+						});
                                 	});
                         	});
                 	});
