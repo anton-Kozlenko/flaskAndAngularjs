@@ -6,7 +6,11 @@ app = Flask(__name__, template_folder='/apolloShield/flaskServer/public', static
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation warning
 
+from flaskServer.models import Employee, positions, position_of_employee, employees_in_teams, teams, locations
+
 db.init_app(app)
+with app.app_context():
+	db.create_all()
 
 from flaskServer import routes
 
