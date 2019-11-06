@@ -57,13 +57,16 @@ def verify_positions_in_db(f):
 		}
 		# get all positions form db, and find if one not exist
 		current_positions = db.session.query(positions).all()
-		for position in current_positions:
-			if position in pos_to_find:
-				pos_to_find[position] = True
+		for pos in current_positions:
+			print('found position {0}'.format(pos.position_name))
+			if pos.position_name in pos_to_find:
+				pos_to_find[pos.position_name] = True
 
 		for attr, value in pos_to_find.items():
 			if value == False:
 				# if found position that not exist, add to db
+				print('value: {0} of key: {1}'.format(value, attr))
+				print('About to carete position: {0}'.format(attr))
 				db.session.add(positions(position_name=attr))
 		return f(*args, **kwargs)
 	return decorated_view

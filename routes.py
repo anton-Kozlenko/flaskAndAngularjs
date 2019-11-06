@@ -30,6 +30,7 @@ def create_employee():
 	# check if such employee does not exist.
 	find_emp_in_db = Employee.query.filter_by(full_name=full_name).first()
 	if not find_emp_in_db == None:
+		print("Aborting, emp already exists")
 		abort(405)
 	# create new Employee object.
 	new_employee = Employee(full_name=full_name, 
