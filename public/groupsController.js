@@ -150,7 +150,7 @@ groupsApp.controller('ctrlGroups', function($scope, $http) {
                                 	});
                         	});
                 	});
-			$scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
+			// $scope.addEmployeeElement = {'full_name': '', 'birth_day': '', 'e_mail': '', 'salary_usd': '', 'first_work_day': '', 'role': ''};
 			$scope.newEmployeeMode = false;
 		}
 		else if ($scope.updateEmployeeMode) {
